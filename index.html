@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪄</text></svg>"
+    />
+    <title>Reflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>
+          Your formatter choked.<br />This one
+          <span class="accent">reads SQL</span>, not lines.
+        </h1>
+        <div class="eyebrow">Not Just Another RegEx Logic</div>
+        <p class="lede">
+          Reflow actually parses the statement structure, so it rebuilds clean,
+          indented SQL even when there isn't a single newline to work from.
+        </p>
+      </header>
+
+      <div class="toolbar">
+        <div class="control-group">
+          <span class="control-label">Case</span>
+          <div class="case-toggle" id="caseToggle">
+            <button data-case="upper" class="active">UPPER</button>
+            <button data-case="lower">lower</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Indent</span>
+          <div class="seg" id="indentCharSeg">
+            <button data-char="space" class="active">Spaces</button>
+            <button data-char="tab">Tabs</button>
+          </div>
+          <div class="stepper" id="indentSizeStepper">
+            <button data-dir="-1" aria-label="Decrease indent size">−</button>
+            <span class="value" id="indentSizeValue">4</span>
+            <button data-dir="1" aria-label="Increase indent size">+</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Blank lines between statements</span>
+          <div class="stepper" id="blankLinesStepper">
+            <button data-dir="-1" aria-label="Decrease blank lines">−</button>
+            <span class="value" id="blankLinesValue">1</span>
+            <button data-dir="1" aria-label="Increase blank lines">+</button>
+          </div>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <button class="format-btn" id="formatBtn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          >
+            <path d="M5 12h14M5 6h9M5 18h6" />
+          </svg>
+          Format
+        </button>
+      </div>
+
+      <div class="editors">
+        <div class="pane before">
+          <div class="pane-head">
+            <span class="pane-title"><span class="pip"></span>Before</span>
+            <span class="pane-meta" id="beforeMeta">0 lines</span>
+          </div>
+          <textarea
+            id="input"
+            spellcheck="false"
+            placeholder="Paste your SQL here - single-line, mangled, or otherwise unformattable..."
+          ></textarea>
+        </div>
+
+        <div class="pane after">
+          <div class="pane-head">
+            <span class="pane-title"><span class="pip"></span>After</span>
+            <span class="pane-meta" id="afterMeta">0 lines</span>
+          </div>
+          <pre class="output-code" id="output" tabindex="0"></pre>
+          <div class="pane-foot">
+            <button class="copy-btn" id="copyBtn">Copy formatted SQL</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="anatomy" id="anatomy">
+        <div class="anatomy-title">What just happened</div>
+        <div class="anatomy-body" id="anatomyBody"></div>
+      </div>
+
+      <p class="footnote">
+        <strong>How this differs from a find-and-replace formatter:</strong>
+        Reflow tokenizes the input - strings, quoted identifiers, comments,
+        operators, parentheses - before deciding where anything goes. That's
+        what lets it tell a real <code>CREATE TABLE</code> apart from a comment
+        that happens to mention one, break each row of a multi-row
+        <code>VALUES</code> list onto its own line, and keep
+        <code>SELECT</code>, <code>FROM</code>, and <code>WHERE</code>
+        as siblings instead of nesting them deeper and deeper. It's a
+        best-effort parser for standard SQL dialects (MySQL, PostgreSQL, SQL
+        Server, SQLite) - not a full grammar - so unusual vendor syntax may
+        format imperfectly.
+      </p>
+
+      <p class="footnote">
+        <strong>Nothing you paste leaves your browser.</strong> Formatting runs
+        entirely in client-side JavaScript - there's no server, no upload, no
+        network request. You can paste production schemas or real data and
+        reload this file from disk later with the same result.
+      </p>
+    </div>
+
+    <footer class="page-footer">Brought you by Manish Majhi x Claude</footer>
+
+    <script src="./js/parser.js"></script>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
